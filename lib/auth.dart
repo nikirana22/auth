@@ -27,16 +27,19 @@ class Auth {
     return userCredential.user;
   }
 
-  void signInWithGoogle() async {
+  Future<User?> signInWithGoogle() async {
+    UserCredential? userCredential;
     GoogleSignInAccount? account = await googleSignIn.signIn();
     if (account != null) {
       log('Google signin Account is not null');
       GoogleSignInAuthentication authentication = await account.authentication;
-      OAuthCredential userCredential = GoogleAuthProvider.credential(
+      OAuthCredential credential = GoogleAuthProvider.credential(
           accessToken: authentication.accessToken,
           idToken: authentication.idToken);
-      await _firebaseAuth.signInWithCredential(userCredential);
+      userCredential=await _firebaseAuth.signInWithCredential(credential);
       log('user has successfully signup with google');
     }
+    return userCredential!.user;
+
   }
 }
