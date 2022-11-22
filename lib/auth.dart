@@ -1,6 +1,7 @@
 library auth;
 
-/// A Calculator.
 class Auth {
-
+  String forTestingPurpose(){
+    return 'this method is made for testing purpose';
+  }
 }
