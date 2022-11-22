@@ -1,7 +1,25 @@
 library auth;
 
+import 'package:firebase_auth/firebase_auth.dart';
+
 class Auth {
-  String forTestingPurpose(){
-    return 'this method is made for testing purpose';
+  final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
+
+  Auth._();
+
+  factory Auth() {
+    return Auth._();
+  }
+
+  Future<User?> createNewFirebaseUser(String email, String password) async {
+    UserCredential userCredential = await _firebaseAuth
+        .createUserWithEmailAndPassword(email: email, password: password);
+    return userCredential.user;
+  }
+
+  Future<User?> loginWithExistingUser(String email, String password) async {
+    UserCredential userCredential = await _firebaseAuth
+        .signInWithEmailAndPassword(email: email, password: password);
+    return userCredential.user;
   }
 }
