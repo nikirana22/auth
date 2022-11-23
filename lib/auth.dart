@@ -2,6 +2,7 @@ library auth;
 
 import 'dart:developer';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
 class Auth {
@@ -30,7 +31,6 @@ class Auth {
     UserCredential? userCredential;
     GoogleSignInAccount? account = await _googleSignIn.signIn();
     if (account != null) {
-      log('Google signin Account is not null');
       GoogleSignInAuthentication authentication = await account.authentication;
       OAuthCredential credential = GoogleAuthProvider.credential(
           accessToken: authentication.accessToken,
@@ -41,4 +41,18 @@ class Auth {
 
     return userCredential!.user;
   }
+
+  Future<User?> signInWithFacebook() async{
+    FacebookAuth facebookAuth = FacebookAuth.instance;
+    LoginResult result = await facebookAuth.login();
+    UserCredential? userCredential;
+    if(result.accessToken!=null) {
+      OAuthCredential oAuthCredential = FacebookAuthProvider.credential(
+          result.accessToken!.token);
+      userCredential=await FirebaseAuth.instance.signInWithCredential(oAuthCredential);
+      log('successfully login with facebook');
+    }
+    return userCredential?.user;
+  }
+
 }
